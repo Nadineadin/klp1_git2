@@ -8,6 +8,20 @@ require("../../includes/header.php");
 require('../../includes/auth.php');
 require_nim_allow('240209501085');
 ?>
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm" >
+  <div class="container">
+    <a class="navbar-brand" href="/klp1pemrogweb/" style="color:white;">My App</a>
+
+    <div class="ms-auto d-flex align-items-center">
+      <?php if (!empty($_SESSION['user']['nim'])): ?>
+        <span class="me-2" style="color:white;">Hi, <?= htmlspecialchars($_SESSION['user']['nim']) ?></span>
+        <a href="/klp1pemrogweb/pages/logout.php" class="btn btn-outline-primary btn-sm" style="color:white;">Logout</a>
+      <?php else: ?>
+        <a href="/klp1pemrogweb/pages/login.php" class="btn btn-primary btn-sm" style="color:white;">Login</a>
+      <?php endif; ?>
+    </div>
+  </div>
+</nav>
 <div class="container my-5">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h2 class="text-primary">Daftar Anggota</h2>
