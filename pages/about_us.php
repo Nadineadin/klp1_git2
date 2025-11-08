@@ -3,6 +3,7 @@ $title = "About Us";
 require_once("../includes/config.php");
 require("../includes/db_connect.php");
 require("../includes/header.php"); 
+require("../includes/navbar.php");
 session_start();
 $feedback_errors = [];
 $feedback_success = false;

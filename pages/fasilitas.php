@@ -3,6 +3,7 @@ $title = "Fasilitas";
 require_once("../includes/config.php");
 require("../includes/db_connect.php");
 require("../includes/header.php"); 
+require("../includes/navbar.php");
 ?>
 <main class="container py-5">
   <div class="container-main fade-in">

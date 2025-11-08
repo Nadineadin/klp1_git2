@@ -3,6 +3,7 @@ $title = "Home";
 require_once("includes/config.php");
 require("includes/db_connect.php");
 require("includes/header.php"); 
+require("includes/navbar.php");
 ?>
 <div>
   <!-- Hero -->
