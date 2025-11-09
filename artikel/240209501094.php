@@ -1,29 +1,31 @@
+<?php 
+require_once("../includes/config.php");
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pengenalan Diri | Andi Nurrizqah Hamdana</title>
+    <title>Pengenalan Diri | Nirwana</title>
 
     <!-- Bootstrap CSS -->
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      href="<?= $base_url ?>assets/css/bootstrap.min.css"
       rel="stylesheet"
     />
 
     <!-- Google Fonts -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      href="<?= $base_url ?>assets/fonts/Poppins/Poppins.css"
       rel="stylesheet"
     />
 
     <!-- Bootstrap Icons -->
     <link
+      href="<?= $base_url ?>assets/bootstrap-icons/bootstrap-icons.css"
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css"
     />
-
-    <link rel="stylesheet" href="../css/styleaboutus.css" />
+    <link rel="stylesheet" href="<?= $base_url ?>assets/css/styleaboutus.css" />
   </head>
   <body>
     <div class="overlay">
@@ -31,7 +33,7 @@
       <div class="header-section">
         <div class="container">
           <h1><i class="bi bi-person-circle"></i> Portofolio</h1>
-          <p class="subtitle">Andi Nurrizqah Hamdana | PTIK F</p>
+          <p class="subtitle">   | PTIK F</p>
         </div>
       </div>
 
@@ -49,8 +51,8 @@
                 class="profile-photo h-100 d-flex align-items-center justify-content-center"
               >
                 <img
-                  src="images/mahasiswa/Rizqah.jpg"
-                  alt="Foto Andi Nurrizqah Hamdana"
+                  src="<?= $base_url ?>assets/images/mahasiswa/Nirwana.jpg"
+                  alt="Foto Nirwana"
                   class="img-fluid"
                 />
               </div>
@@ -59,19 +61,17 @@
             <!-- BIODATA-->
             <div class="col-md-6 col-lg-6">
               <div class="profile-box">
-                <p><strong>Nama:</strong> Andi Nurrizqah Hamdana</p>
-                <p><strong>NIM:</strong> 240209501084</p>
+                <p><strong>Nama:</strong> Nirwana</p>
+                <p><strong>NIM:</strong> 240209501094</p>
                 <p><strong>Kelas:</strong> PTIK F</p>
-                <p>
-                  <strong>Alamat:</strong> <mark>Jl. Mallengkeri Raya</mark>
-                </p>
-                <p><strong>Asal Sekolah:</strong> MAN 1 BONE</p>
+                <p><strong>Alamat:</strong> <mark>Jln. Turatea</mark></p>
+                <p><strong>Asal Sekolah:</strong> SMKN 1 Selayar</p>
               </div>
 
               <div class="motto-box">
                 <i class="bi bi-quote" style="font-size: 2rem"></i>
                 <p class="mt-3 mb-0">
-                  Apa yang kuusahakan hari ini, itu yang akan aku tuai nantinya
+                  Belajar bukan untuk hari ini saja, tetapi untuk masa depan
                 </p>
               </div>
             </div>
@@ -85,27 +85,17 @@
           </h2>
           <div class="experience-text">
             <p>
-              Sebuah pengalaman yang tak pernah terduga bisa berkuliah di
-              jurusan sekarang ini dan mendapat kelas di PTIK F. Di semester
-              awal saya merasa kesulitan untuk adaptasi dengan lingkungan dan
-              matkul yang dipelajari. Kesulitan ini ada, mungkin salah satu
-              alasannya karena background saya yang merupakan alumni Madrasah.
-              Dan memang tidak ada planning untuk ambil jurusan ini. Tapi
-              setelah menjalani semester satu dibersamai oleh teman-teman yang
-              saling suport dan akhirnya saya bisa survive di dunia perkuliahan.
+              Selama mengikuti kuliah di PTIK, saya mendapatkan banyak
+              pengalaman baru. Saya belajar berbagai mata kuliah yang berkaitan
+              dengan teknologi informasi, pemrograman, dan pendidikan. Hal ini
+              menambah wawasan dan pengetahuan saya terutama dalam bidang
+              komputer dan jaringan.
             </p>
             <p class="mt-3">
-              Semester dua pun datang dengan berbagai tugasnya tetapi masih
-              lebih ringan dibanding semester satu. Selama berkuliah di dua
-              semester lalu terasa sangat singkat, mungkin rotasi bulan yang
-              berputar begitu cepat yang menyebabkan perputaran jarumnya tak
-              terasa. Oh iya, selama semester satu anak-anak PTIK berkuliah
-              secara daring dikarenakan ruang belajar yang tidak ada. Tapi
-              memasuki semester dua perkualihan mulai dilaksankan secara offline
-              dan lokasinya di Lamacca. Vibes perkualihan lebih terasa selama
-              offline karena bisa lebih banyak interaksi dengan teman-teman.
-              Semoga semester tiga ini bisa terjalani dengan baik dan tuntas.
-              <strong>SEMANGAT KULIAH!!!</strong>
+              Tidak hanya materi kuliah, saya juga belajar bagaimana bekerja
+              dalam tim, mengerjakan tugas kelompok bersama, dan
+              mempresentasikan hasil kerja. Semua pengalaman ini membuat saya
+              lebih percaya diri dan siap menghadapi tantangan di masa depan.
             </p>
           </div>
         </div>
@@ -113,16 +103,19 @@
         <!-- Mata Kuliah Favorit -->
         <div class="content-card">
           <h2 class="section-title">
-            <i class="bi bi-star-fill"></i> Mata Kuliah Favorit
+            <i class="bi bi-star-fill"></i> Daftar Mata Kuliah
           </h2>
           <div class="row justify-content-center">
             <div class="col-lg-8">
               <ol class="list-group list-group-numbered">
-                <li class="list-group-item">Perkembangan Peserta Didik</li>
-                <li class="list-group-item">Struktur Data</li>
-                <li class="list-group-item">Algoritma dan Pemrograman Dasar</li>
+                <li class="list-group-item">Jaringan Komputer</li>
+                <li class="list-group-item">Profesi Kependidikan</li>
                 <li class="list-group-item">Pemrograman Web</li>
-                <li class="list-group-item">Matematika Dasar</li>
+                <li class="list-group-item">Keamanan Komputer</li>
+                <li class="list-group-item">Strategi Pembelajaran</li>
+                <li class="list-group-item">Struktur Data</li>
+                <li class="list-group-item">Inovasi Teknologi</li>
+                <li class="list-group-item">Kecerdasan Buatan</li>
               </ol>
             </div>
           </div>
@@ -135,12 +128,12 @@
             <div class="col-lg-8">
               <ul class="list-group">
                 <li class="list-group-item">
-                  <i class="bi bi-person-check-fill text-primary"></i> Dyah
-                  Darma Andayani, S.T., M.Tel.Eng
+                  <i class="bi bi-person-check-fill text-primary"></i> Haekal
+                  Febriansyah Ramadhan, S.T., M.T., M.Pd.
                 </li>
                 <li class="list-group-item">
                   <i class="bi bi-person-check-fill text-primary"></i> Prof. Dr.
-                  Ir. Riana Tangkin Mangesa, M.T
+                  Ir. Riana Tangkin Mangesa, M.T.
                 </li>
                 <li class="list-group-item">
                   <i class="bi bi-person-check-fill text-primary"></i> Alifya
@@ -151,16 +144,20 @@
                   Hidayat M, S.Pd., M.Pd.
                 </li>
                 <li class="list-group-item">
+                  <i class="bi bi-person-check-fill text-primary"></i> Dr. Ir.
+                  Ridwan Daud Mahande, S.Pd., M.Pd., IPM.
+                </li>
+                <li class="list-group-item">
                   <i class="bi bi-person-check-fill text-primary"></i> Kurnia
                   Wahyu Prima, S.Pd., M.Pd.T
                 </li>
                 <li class="list-group-item">
-                  <i class="bi bi-person-check-fill text-primary"></i> Haekal
-                  Febriansyah Ramadhan, S.T., M.T., M.Pd.
-                </li>
-                <li class="list-group-item">
                   <i class="bi bi-person-check-fill text-primary"></i> Muhammad
                   Romario Basirung, S.Pd., M.Pd.
+                </li>
+                <li class="list-group-item">
+                  <i class="bi bi-person-check-fill text-primary"></i> Dyah
+                  Darma Andayani, S.T., M.Tel.Eng.
                 </li>
               </ul>
             </div>
@@ -188,27 +185,35 @@
               <tbody>
                 <tr>
                   <td>1</td>
-                  <td>Fransisca Gabriella</td>
-                  <td>Ela</td>
+                  <td>Nirwana</td>
+                  <td>Wana</td>
                   <td>Perempuan</td>
-                  <td>Jl. Tidung</td>
-                  <td>SMAN 9 Makassar</td>
+                  <td>Selayar</td>
+                  <td>SMKN 1 selayar</td>
                 </tr>
                 <tr>
                   <td>2</td>
-                  <td>Uci Adityantikasari</td>
-                  <td>Cici</td>
+                  <td>Sri Wulandari</td>
+                  <td>Sri</td>
                   <td>Perempuan</td>
-                  <td>Barombong</td>
-                  <td>SMAN 1 Tawangsari</td>
+                  <td>Selayar</td>
+                  <td>SMKN 5 Selayar</td>
                 </tr>
                 <tr>
                   <td>3</td>
-                  <td>Nurhandayani</td>
-                  <td>Nanda</td>
+                  <td>Nayla Alfinka Azka</td>
+                  <td>Nay</td>
                   <td>Perempuan</td>
-                  <td>Jl. Mannuruki</td>
-                  <td>SMKN 3 Takalar</td>
+                  <td>Luwu Timur</td>
+                  <td>MAN Luwu Timur</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>Ahmad Nur Rahmatuullah</td>
+                  <td>Rere</td>
+                  <td>Laki-laki</td>
+                  <td>Enrekang</td>
+                  <td>SMAN 2 Enrekang</td>
                 </tr>
               </tbody>
             </table>
@@ -219,12 +224,12 @@
       <!-- Footer -->
       <footer>
         <div class="container">
-          <p>2025 Andi Nurrizqah Hamdana | PTIK F</p>
+          <p>&copy; 2025 Kelompok 1 Pemrograman Web | SMA Negeri 9 Makassar</p>
         </div>
       </footer>
     </div>
 
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= $base_url ?>assets/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

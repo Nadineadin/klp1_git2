@@ -8,6 +8,11 @@ body {
   scroll-behavior: smooth;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 /* Navbar */
 .navbar {
   backdrop-filter: blur(8px);
@@ -19,6 +24,17 @@ body {
 }
 .navbar-nav .nav-link:hover {
   color: #ffd700; /* kuning keemasan */
+}
+#page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+main {
+  flex: 1 0 auto; /* isi mengambil ruang */
+}
+footer {
+  flex-shrink: 0; /* footer tetap di bawah */
 }
 
 /* Hero section */

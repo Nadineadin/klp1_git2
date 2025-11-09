@@ -1,3 +1,6 @@
+<?php 
+require_once("../includes/config.php");
+?>
 <!DOCTYPE html>
 <html lang="id">
   <head>
@@ -5,20 +8,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fransisca Gabriela</title>
 
-    <!-- Bootstrap + Icons + Font (sama seperti artikelmu) -->
+    <!-- Bootstrap CSS -->
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      href="<?= $base_url ?>assets/css/bootstrap.min.css"
       rel="stylesheet"
     />
+
+    <!-- Bootstrap Icons -->
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      href="<?= $base_url ?>assets/bootstrap-icons/bootstrap-icons.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="../css/style.css" />
+
+    <!-- Google Fonts -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap"
+      href="<?= $base_url ?>assets/fonts/Montserrat/Montserrat.css"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="<?= $base_url ?>assets/css/styleaboutus.css" />
   </head>
 
   <body class="about-page bg-light">
@@ -35,7 +42,7 @@
           <!-- pastikan file ini ada: ela.jpg -->
           <img
             class="about-main-img rounded-4 shadow-lg"
-            src="ela.jpg"
+            src="<?= $base_url ?>assets/images/mahasiswa/ela.jpg"
             alt="ela"
           />
         </div>
@@ -199,6 +206,6 @@ Motto:
       &copy; 2025 Fransisca Gabriela | 240209501089 | PTIK F
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= $base_url ?>assets/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

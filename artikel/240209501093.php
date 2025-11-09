@@ -1,3 +1,6 @@
+<?php 
+require_once("../includes/config.php");
+?>
 <!DOCTYPE html>
 <html lang="id">
   <head>
@@ -5,15 +8,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Sherlina Muliadi</title>
 
+    <!-- Bootstrap CSS -->
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      href="<?= $base_url ?>assets/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="../css/style.css" />
+
+    <!-- Google Fonts -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap"
+      href="<?= $base_url ?>assets/fonts/Montserrat/Montserrat.css"
       rel="stylesheet"
     />
+    <!-- Bootstrap Icons -->
+    <link
+      href="<?= $base_url ?>assets/bootstrap-icons/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="<?= $base_url ?>assets/css/styleaboutus.css" />
   </head>
   <body class="about-page bg-light">
     <header class="py-4 text-center bg-white shadow-sm">
@@ -27,7 +38,7 @@
         <div class="about-photo position-relative">
           <img
             class="about-main-img rounded-4 shadow-lg"
-            src="foto.jpeg"
+            src="<?= $base_url ?>assets/images/mahasiswa/sherli.jpeg"
             alt="foto"
           />
         </div>
@@ -180,6 +191,6 @@
       &copy; 2025 Sherlina Muliadi | PTIK F
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= $base_url ?>assets/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

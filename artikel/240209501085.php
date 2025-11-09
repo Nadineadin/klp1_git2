@@ -1,3 +1,6 @@
+<?php 
+require_once("../includes/config.php");
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,24 +10,24 @@
 
     <!-- Bootstrap CSS -->
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      href="<?= $base_url ?>assets/css/bootstrap.min.css"
       rel="stylesheet"
     />
 
     <!-- Google Fonts -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      href="<?= $base_url ?>assets/fonts/Poppins/Poppins.css"
       rel="stylesheet"
     />
 
     <!-- Bootstrap Icons -->
     <link
+      href="<?= $base_url ?>assets/bootstrap-icons/bootstrap-icons.css"
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css"
     />
 
-    <link rel="stylesheet" href="css/styleaboutus.css" />
- <div class="container">
+    <link rel="stylesheet" href="<?= $base_url ?>assets/css/styleaboutus.css" />
+      <div class="container">
         <!-- Pengenalan Diri - FOTO KIRI, BIODATA KANAN -->
         <div class="content-card">
           <h2 class="section-title">
@@ -38,7 +41,7 @@
                 class="profile-photo h-100 d-flex align-items-center justify-content-center"
               >
                 <img
-                  src="images/mahasiswa/nadin.jpg"
+                  src="<?= $base_url ?>/assets/images/mahasiswa/nadin.jpg"
                   alt="Foto Nadine Patulak"
                   class="img-fluid"
                 />
@@ -216,6 +219,6 @@
     </div>
 
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= $base_url ?>assets/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

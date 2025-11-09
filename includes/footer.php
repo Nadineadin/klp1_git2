@@ -4,7 +4,7 @@
       <i class="bi bi-arrow-up"></i>
     </button>
     <!-- Footer -->
-    <footer class="text-center py-4 text-white mt-5">
+    <footer class="text-center py-4 text-white">
       <div class="container">
         <img
           src="<?= $base_url ?>assets/images/lainnya/lambang.png"

@@ -86,16 +86,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['feedback_submit'])) {
         if ($result = $mysqli->query($query)) :
         ?>
           <div class="row g-4">
-            <?php while ($row = $result->fetch_assoc()): 
+            <?php while ($row = $result->fetch_assoc()):
               // aman-kan output
-              $nim   = htmlspecialchars($row['nim']);
-              $nama  = htmlspecialchars($row['nama']);
-              $kelas = htmlspecialchars($row['kelas']);
+              $nim   = htmlspecialchars($row['nim'], ENT_QUOTES, 'UTF-8');
+              $nama  = htmlspecialchars($row['nama'], ENT_QUOTES, 'UTF-8');
+              $kelas = htmlspecialchars($row['kelas'], ENT_QUOTES, 'UTF-8');
               $gambarFile = $row['gambar'];
 
-              // buat URL gambar
+              // buat URL gambar (sama seperti sebelumnya)
               $imgUrl = $base_url . 'assets/images/mahasiswa/' . rawurlencode($gambarFile);
 
+              // ----- Buat URL artikel berdasarkan NIM -----
+              // nama file yang diharapkan: <nim>.php
+              $artikelFile = $row['nim'] . '.php';
+
+              // path server ke folder artikel (karena file ini berada di pages/)
+              $serverArticlePath = __DIR__ . '/../artikel/' . $artikelFile;
+
+              if (file_exists($serverArticlePath)) {
+                // file artikel khusus anggota ada -> gunakan
+                $artikelUrl = $base_url . 'artikel/' . rawurlencode($artikelFile);
+              } else {
+                // fallback: gunakan halaman index artikel (atau artikel default)
+                $artikelUrl = $base_url . 'artikel/artikel.php';
+              }
             ?>
               <div class="col-md-6 col-lg-4">
                 <div class="card h-100 text-center border-0 shadow-sm">
@@ -107,13 +121,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['feedback_submit'])) {
                   <div class="card-body">
                     <h5 class="card-title mb-1"><?= $nama ?></h5>
                     <p class="text-muted small mb-2">(<?= $nim ?> / <?= $kelas ?>)</p>
-                    <a href="<?= htmlspecialchars($artikelUrl) ?>"
+
+                    <!-- tombol ke artikel anggota -->
+                    <a href="<?= htmlspecialchars($artikelUrl, ENT_QUOTES, 'UTF-8') ?>"
                       class="btn btn-outline-primary btn-sm"
-                      >Lihat Artikel</a>
+                      <?= (stripos($artikelUrl, $base_url) === 0) ? '' : 'target="_blank" rel="noopener noreferrer"' ?>>
+                      Lihat Artikel
+                    </a>
                   </div>
                 </div>
               </div>
             <?php endwhile; ?>
+
           </div>
         <?php
           $result->free();

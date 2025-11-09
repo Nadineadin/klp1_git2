@@ -79,12 +79,12 @@ require("../includes/navbar.php");
 
         // Siapkan URL gambar kartu (fallback placeholder jika kosong)
         if ($gambarFile !== '') {
-          $gambarUrl = $base_url . 'assets/images/fasilitas/' . rawurlencode($gambarFile);
+          $gambarUrl = $base_url . 'assets/images/ekstrakurikuler/' . rawurlencode($gambarFile);
           // Jika ingin memeriksa file ada di server, uncomment dan sesuaikan path:
           // $serverPath = __DIR__ . '/../assets/images/fasilitas/' . $gambarFile;
           // if (!file_exists($serverPath)) $gambarUrl = $base_url . 'assets/images/fasilitas/placeholder.png';
         } else {
-          $gambarUrl = $base_url . 'assets/images/fasilitas/placeholder.png';
+          $gambarUrl = $base_url . 'assets/images/ekstrakurikuler/placeholder.png';
         }
 
         // Ambil list kegiatan/prestasi (jika ada)

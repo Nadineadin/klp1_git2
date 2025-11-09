@@ -4,11 +4,6 @@ $(document).ready(function () {
   setTimeout(() => {
     $(".fade-in").addClass("show");
   }, 300);
-
-  $(".navbar-brand").click(function (e) {
-    e.preventDefault();
-    $("html, body").animate({ scrollTop: 0 }, "slow");
-  });
 });
 
 $(window).on("scroll", function () {
@@ -111,4 +106,23 @@ $("#feedbackForm").on("submit", function (e) {
   $("#feedbackAlert").removeClass("d-none").hide().fadeIn(400);
   $(this).trigger("reset");
   setTimeout(() => $("#feedbackAlert").fadeOut(600), 3000);
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Show/hide password
+  const toggle = document.getElementById("togglePwd");
+  const pwd = document.getElementById("passwordInput");
+  toggle.addEventListener("click", function () {
+    if (pwd.type === "password") {
+      pwd.type = "text";
+      toggle.textContent = "Hide";
+    } else {
+      pwd.type = "password";
+      toggle.textContent = "Show";
+    }
+  });
+
+  // small UX: focus nim when page loads on small screens too
+  const nim = document.querySelector('input[name="nim"]');
+  if (nim) nim.focus();
 });
