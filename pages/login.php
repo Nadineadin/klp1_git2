@@ -7,49 +7,6 @@ require_once("../includes/config.php");
 require("../includes/db_connect.php");
 require("../includes/header.php");
 require("../includes/navbar.php");
-
-// Jika sudah login, redirect ke home/admin
-if (!empty($_SESSION['user']['nim'])) {
-  header("Location: " . $base_url);
-  exit;
-}
-
-$errors = [];
-$old = ['nim'=>''];
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $old['nim'] = trim($_POST['nim'] ?? '');
-  $password = trim($_POST['password'] ?? '');
-
-  if ($old['nim'] === '' || $password === '') {
-    $errors[] = "Harap isi semua kolom.";
-  } else {
-    // Cari user berdasarkan nim (prepared statement)
-    $stmt = $mysqli->prepare("SELECT nim, password FROM user WHERE nim = ? LIMIT 1");
-    $stmt->bind_param('s', $old['nim']);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    $user = $res->fetch_assoc();
-    $stmt->close();
-
-    if ($user) {
-      // NOTE: DB saat ini menyimpan password plain (contoh: '12345').
-      // Jika nanti kamu menyimpan hash (password_hash), ganti pengecekan menjadi:
-      // if (password_verify($password, $user['password'])) { ... }
-      if ($user['password'] === $password) {
-        // berhasil login
-        $_SESSION['user'] = ['nim' => $user['nim']];
-        $_SESSION['flash']['success'] = 'Login berhasil. Selamat datang!';
-        header("Location: " . $base_url);
-        exit;
-      } else {
-        $errors[] = "NIM atau password tidak cocok.";
-      }
-    } else {
-      $errors[] = "NIM atau password tidak cocok.";
-    }
-  }
-}
 ?>
 <div id="page" class="d-flex flex-column min-vh-100">
   <main class="flex-fill">
@@ -83,10 +40,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="alert alert-success"><?= htmlspecialchars($_SESSION['flash']['success']); unset($_SESSION['flash']['success']); ?></div>
               <?php endif; ?>
 
-              <form method="post" novalidate>
+              <form method="post" action="<?= $base_url ?>model/sistem_login.php" novalidate>
                 <div class="mb-3">
                   <label class="form-label">NIM</label>
-                  <input name="nim" type="text" class="form-control" value="<?=htmlspecialchars($old['nim'])?>" required autofocus>
+                  <input name="nim" type="text" class="form-control" required autofocus>
                 </div>
 
                 <div class="mb-3 position-relative">

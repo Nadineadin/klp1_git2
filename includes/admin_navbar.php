@@ -1,7 +1,5 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) session_start();
-require_once(__DIR__ . "/config.php");
-require_once(__DIR__ . "/db_connect.php");
 
 $nama_user = null;
 if (!empty($_SESSION['user']['nim'])) {
@@ -41,11 +39,7 @@ if (!empty($_SESSION['user']['nim'])) {
           <span class="me-2 text-light">Hi, <?= htmlspecialchars($nama_user ?? $_SESSION['user']['nim']) ?></span>
         </li>
         <li class="nav-item">
-          <a href="/klp1pemrogweb/pages/logout.php" type="button" class="btn btn-outline-light ">Logout</a>
-        </li>
-      <?php else: ?>
-        <li class="nav-item">
-          <a href="/klp1pemrogweb/pages/login.php" type="button" class="btn btn-outline-light nav-link">Login</a>
+          <a href="/klp1pemrogweb/model/logout.php" type="button" class="btn btn-outline-light ">Logout</a>
         </li>
       <?php endif; ?>
       </ul>
