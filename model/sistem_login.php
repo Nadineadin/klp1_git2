@@ -1,16 +1,34 @@
 <?php
 // model/sistem_login.php
-session_start();
+// Pastikan file ini aman (di luar webroot bila bisa) dan PHP >= 7.3 direkomendasikan.
 
-$_SESSION['user'] = ['id' => $user['id'], 'nim' => $user['nim']];
+// Set secure session cookie params sebelum session_start
+$secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/',
+    'domain' => '', // kosong = host saat ini
+    'secure' => $secure,
+    'httponly' => true,
+    'samesite' => 'Lax'
+]);
+
+session_start();
 
 // helper flash (simpel)
 function flash_set($key, $message) {
+    if (!isset($_SESSION['flash'])) $_SESSION['flash'] = [];
     $_SESSION['flash'][$key] = $message;
 }
 
 // include DB (pastikan path benar relative ke file ini)
 require_once __DIR__ . '/../includes/db_connect.php';
+
+// Pastikan request via POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: ../pages/login.php');
+    exit;
+}
 
 // Ambil input
 $input = trim($_POST['nim'] ?? '');
@@ -30,6 +48,7 @@ $nim_input = $input;
 $sql = "SELECT id, nim, password FROM `user` WHERE nim = ? LIMIT 1";
 $stmt = $mysqli->prepare($sql);
 if (!$stmt) {
+    // error prepare
     flash_set('error', 'Terjadi kesalahan server (prepare).');
     header('Location: ../pages/login.php');
     exit;
@@ -49,17 +68,26 @@ if (!$user) {
 // Ambil password DB
 $db_hash = $user['password'];
 
-// Cek apakah password di DB sudah hashed (bcrypt/argon2)
+// Verifikasi password:
+// - Jika field DB berisi hash valid (password_get_info algo != 0) -> password_verify
+// - Jika bukan hash (algo == 0) -> anggap plaintext, bandingkan langsung
 $verified = false;
-if (strpos($db_hash, '$2y$') === 0 || strpos($db_hash, '$2b$') === 0 || strpos($db_hash, '$argon2') === 0) {
-    // hashed -> gunakan password_verify
-    if (password_verify($password, $db_hash)) $verified = true;
+$used_plaintext = false;
+
+$info = password_get_info($db_hash);
+if (!empty($db_hash) && $info['algo'] !== 0) {
+    // DB berisi hash: gunakan password_verify
+    if (password_verify($password, $db_hash)) {
+        $verified = true;
+    }
 } else {
-    // belum hashed (plain text) -> bandingkan langsung (sementara)
-    if ($password === $db_hash) $verified = true;
+    // DB bukan hash (kemungkinan plaintext) -> bandingkan langsung
+    if ($password === $db_hash) {
+        $verified = true;
+        $used_plaintext = true;
+    }
 }
 
-// Jika verifikasi gagal
 if (!$verified) {
     flash_set('error', 'nim atau password salah.');
     header('Location: ../pages/login.php');
@@ -72,6 +100,49 @@ $_SESSION['user'] = [
     'id' => $user['id'],
     'nim' => $user['nim']
 ];
+
+// --- Upgrade password (hash) bila perlu ---
+// Pilih algoritma: prefer argon2id bila tersedia, fallback bcrypt
+if (defined('PASSWORD_ARGON2ID')) {
+    $algo = PASSWORD_ARGON2ID;
+    $algo_name = 'argon2id';
+    $rehash_options = []; // bisa set memory_cost/time_cost/threads jika perlu
+} else {
+    $algo = PASSWORD_BCRYPT;
+    $algo_name = 'bcrypt';
+    $rehash_options = ['cost' => 12];
+}
+
+try {
+    $need_rehash = false;
+    // Jika password di DB plaintext (used_plaintext) -> perlu hash
+    if ($used_plaintext) {
+        $need_rehash = true;
+    } else {
+        // DB sudah hash -> cek apakah perlu rehash karena opsi berubah
+        // Hanya panggil password_needs_rehash bila DB berisi hash valid
+        if ($info['algo'] !== 0 && password_needs_rehash($db_hash, $algo, $rehash_options)) {
+            $need_rehash = true;
+        }
+    }
+
+    if ($need_rehash) {
+        $new_hash = password_hash($password, $algo, $rehash_options);
+        if ($new_hash !== false) {
+            $u_stmt = $mysqli->prepare("UPDATE `user` SET `password` = ? WHERE id = ?");
+            if ($u_stmt) {
+                $u_stmt->bind_param('si', $new_hash, $user['id']);
+                $u_stmt->execute();
+                // optional: cek affected_rows jika ingin log
+                $u_stmt->close();
+            }
+            // jika gagal update, jangan tolak login — tetap login.
+        }
+    }
+} catch (Throwable $e) {
+    // Jika terjadi error pada rehash/update, jangan blokir login — tapi bisa log jika perlu.
+    // error_log($e->getMessage());
+}
 
 // Routing berdasarkan nim (sesuaikan atau extend list ini)
 $nim = $user['nim'];

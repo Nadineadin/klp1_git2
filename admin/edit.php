@@ -2,12 +2,11 @@
 // admin/user/edit.php
 $title = "Edit Anggota";
 if (session_status() === PHP_SESSION_NONE) session_start();
-require_once("../../includes/config.php");
-require("../../includes/db_connect.php");
-require('../../includes/auth.php');
-require("../../includes/header.php");
-require("../../includes/admin_navbar.php");
-require_nim_allow('240209501085');
+require_once("../includes/config.php");
+require("../includes/db_connect.php");
+require('../includes/auth.php');
+require("../includes/header.php");
+require("../includes/admin_navbar.php");
 
 $nim = $_GET['nim'] ?? '';
 if ($nim === '') { header('Location: index.php'); exit; }
@@ -47,14 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!in_array(strtolower($ext), $allowed)) {
             $errors['gambar'] = 'Tipe gambar tidak didukung.';
         } else {
-            $dest_dir = __DIR__ . '/../../assets/images/mahasiswa/';
+            $dest_dir = __DIR__ . '/../assets/images/mahasiswa/';
             if (!is_dir($dest_dir)) mkdir($dest_dir, 0755, true);
             $fname = uniqid('mhs_') . '.' . $ext;
             $target = $dest_dir . $fname;
             if (move_uploaded_file($_FILES['gambar']['tmp_name'], $target)) {
                 // hapus file lama jika ada
-                if (!empty($old['gambar']) && file_exists(__DIR__ . '/../../assets/images/mahasiswa/' . $old['gambar'])) {
-                    @unlink(__DIR__ . '/../../assets/images/mahasiswa/' . $old['gambar']);
+                if (!empty($old['gambar']) && file_exists(__DIR__ . '/../assets/images/mahasiswa/' . $old['gambar'])) {
+                    @unlink(__DIR__ . '/../assets/images/mahasiswa/' . $old['gambar']);
                 }
                 $gambar = $fname;
             } else {
@@ -175,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="mb-3">
               <label class="form-label">Gambar (ganti jika perlu)</label>
-              <?php if (!empty($old['gambar']) && file_exists(__DIR__.'/../../assets/images/mahasiswa/'. $old['gambar'])): ?>
+              <?php if (!empty($old['gambar']) && file_exists(__DIR__.'/../assets/images/mahasiswa/'. $old['gambar'])): ?>
                 <div class="mb-2"><img src="<?= '/klp1pemrogweb/assets/images/mahasiswa/' . htmlspecialchars($old['gambar']) ?>" style="width:120px; height:120px; object-fit:cover; border-radius:6px;"></div>
               <?php endif; ?>
               <input type="file" name="gambar" class="form-control <?=isset($errors['gambar']) ? 'is-invalid' : ''?>">
@@ -202,5 +201,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
     </div>
   </main>
-<?php require_once("../../includes/footer.php"); ?>
+<?php require_once("../includes/footer.php"); ?>
 </div>

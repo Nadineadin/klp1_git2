@@ -18,7 +18,7 @@ switch ($_SESSION['user']['nim']) {
     header('Location: /klp1pemrogweb/admin/prestasi/');
     exit;
   default:
-    header('Location: /klp1pemrogweb/');
+    header('Location: /klp1pemrogweb/admin/');
     exit;
 }
 

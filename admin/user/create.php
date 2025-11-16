@@ -10,7 +10,10 @@ require("../../includes/admin_navbar.php");
 require_nim_allow('240209501085');
 
 $errors = [];
-$old = ['nim'=>'','nama'=>'','kelas'=>'','alamat'=>'','asal_sekolah'=>'','motto'=>'','pengalaman'=>''];
+$old = [
+    'nim'=>'','nama'=>'','kelas'=>'','alamat'=>'','asal_sekolah'=>'','motto'=>'','pengalaman'=>'',
+    'password'=>'','password_confirm'=>''
+];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $old['nim'] = trim($_POST['nim'] ?? '');
@@ -20,9 +23,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $old['asal_sekolah'] = trim($_POST['asal_sekolah'] ?? '');
     $old['motto'] = trim($_POST['motto'] ?? '');
     $old['pengalaman'] = trim($_POST['pengalaman'] ?? '');
+    $old['password'] = $_POST['password'] ?? '';
+    $old['password_confirm'] = $_POST['password_confirm'] ?? '';
 
     if ($old['nim'] === '') $errors['nim'] = 'NIM wajib diisi.';
     if ($old['nama'] === '') $errors['nama'] = 'Nama wajib diisi.';
+
+    // Validasi password (wajib saat create)
+    if ($old['password'] === '') {
+        $errors['password'] = 'Password wajib diisi.';
+    } else {
+        if (strlen($old['password']) < 6) $errors['password'] = 'Password minimal 6 karakter.';
+        if ($old['password'] !== $old['password_confirm']) $errors['password_confirm'] = 'Konfirmasi password tidak cocok.';
+    }
 
     // handle gambar
     $gambar = null;
@@ -37,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $fname = uniqid('mhs_') . '.' . $ext;
             $target = $dest_dir . $fname;
             if (move_uploaded_file($_FILES['gambar']['tmp_name'], $target)) {
-                // simpan relative path dari root project
+                // simpan filename saja (kamu tampilin dengan base path di view)
                 $gambar = $fname;
             } else {
                 $errors['gambar'] = 'Gagal mengunggah gambar.';
@@ -46,15 +59,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($errors)) {
+        // Simpan ke table anggota
         $sql = "INSERT INTO anggota (nim,nama,kelas,alamat,asal_sekolah,motto,pengalaman,gambar) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $mysqli->prepare($sql);
-        $stmt->bind_param('ssssssss', $old['nim'],$old['nama'],$old['kelas'],$old['alamat'],$old['asal_sekolah'],$old['motto'],$old['pengalaman'],$gambar);
-        if ($stmt->execute()) {
-            $_SESSION['flash']['success'] = 'Anggota berhasil ditambahkan.';
-            header('Location: index.php');
-            exit;
+        if (!$stmt) {
+            $errors['general'] = 'Gagal prepare: ' . $mysqli->error;
         } else {
-            $errors['general'] = 'Gagal menyimpan ke database: ' . $mysqli->error;
+            $stmt->bind_param('ssssssss', $old['nim'],$old['nama'],$old['kelas'],$old['alamat'],$old['asal_sekolah'],$old['motto'],$old['pengalaman'],$gambar);
+            if ($stmt->execute()) {
+                $stmt->close();
+
+                // Hash password dan simpan ke table user (insert atau update jika sudah ada)
+                // Pilih algoritma
+                if (defined('PASSWORD_ARGON2ID')) {
+                    $algo = PASSWORD_ARGON2ID;
+                    $options = [];
+                } else {
+                    $algo = PASSWORD_BCRYPT;
+                    $options = ['cost' => 12];
+                }
+                $pw_hash = password_hash($old['password'], $algo, $options);
+
+                if ($pw_hash === false) {
+                    // Hash gagal — tetap redirect tapi beri peringatan
+                    $_SESSION['flash']['success'] = 'Anggota berhasil ditambahkan. Namun hashing password gagal (periksa server).';
+                    header('Location: index.php');
+                    exit;
+                }
+
+                // Coba insert user
+                $u_stmt = $mysqli->prepare("INSERT INTO `user` (nim, password) VALUES (?, ?)");
+                if ($u_stmt) {
+                    $u_stmt->bind_param('ss', $old['nim'], $pw_hash);
+                    if (!$u_stmt->execute()) {
+                        // Kalau gagal karena duplicate nim, coba update password saja
+                        if ($mysqli->errno === 1062) {
+                            $u_stmt->close();
+                            $up = $mysqli->prepare("UPDATE `user` SET password = ? WHERE nim = ?");
+                            if ($up) {
+                                $up->bind_param('ss', $pw_hash, $old['nim']);
+                                $up->execute();
+                                $up->close();
+                            }
+                        } else {
+                            // non-duplicate error
+                            // catat error tapi jangan rollback anggota yang sudah dibuat
+                        }
+                    } else {
+                        $u_stmt->close();
+                    }
+                } else {
+                    // prepare gagal -> bisa log
+                }
+
+                $_SESSION['flash']['success'] = 'Anggota berhasil ditambahkan.';
+                header('Location: index.php');
+                exit;
+            } else {
+                $errors['general'] = 'Gagal menyimpan ke database: ' . $stmt->error;
+                $stmt->close();
+            }
         }
     }
 }
@@ -77,6 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="mb-3">
               <label class="form-label">Nama</label>
               <input name="nama" class="form-control <?=isset($errors['nama']) ? 'is-invalid' : ''?>" value="<?=htmlspecialchars($old['nama'])?>">
+              <?php if (isset($errors['nama'])): ?><div class="invalid-feedback"><?=htmlspecialchars($errors['nama'])?></div><?php endif; ?>
             </div>
 
             <div class="mb-3">
@@ -108,6 +173,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <label class="form-label">Gambar (opsional)</label>
               <input type="file" name="gambar" class="form-control <?=isset($errors['gambar']) ? 'is-invalid' : ''?>">
               <?php if (isset($errors['gambar'])): ?><div class="invalid-feedback"><?=htmlspecialchars($errors['gambar'])?></div><?php endif; ?>
+            </div>
+
+            <!-- Password fields -->
+            <div class="mb-3">
+              <label class="form-label">Password akun (wajib)</label>
+              <input type="password" name="password" class="form-control <?=isset($errors['password']) ? 'is-invalid' : ''?>" value="">
+              <?php if (isset($errors['password'])): ?><div class="invalid-feedback"><?=htmlspecialchars($errors['password'])?></div><?php endif; ?>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Konfirmasi Password</label>
+              <input type="password" name="password_confirm" class="form-control <?=isset($errors['password_confirm']) ? 'is-invalid' : ''?>" value="">
+              <?php if (isset($errors['password_confirm'])): ?><div class="invalid-feedback"><?=htmlspecialchars($errors['password_confirm'])?></div><?php endif; ?>
             </div>
 
             <button class="btn btn-primary">Simpan</button>
